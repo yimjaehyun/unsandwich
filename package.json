@@ -9,7 +9,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bluebird": "^3.5.3",
+    "ejs": "^2.6.1",
     "express": "^4.16.4",
-    "googleapis": "^27.0.0"
+    "googleapis": "^37.2.0"
   }
 }
