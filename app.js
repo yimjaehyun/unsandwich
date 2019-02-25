@@ -13,46 +13,31 @@ const oauth2Client = new google.auth.OAuth2(
 google.options({auth: oauth2Client});
 
 const scopes = [
-  'https://www.googleapis.com/auth/gmail.readonly'
+  'https://mail.google.com/',
+  'https://www.googleapis.com/auth/documents'
 ];
 
 const url = oauth2Client.generateAuthUrl({
   scope: scopes
 });
 
+const scriptId = '1PRlWl7iMcR9GsA2cs2cVe4MR8Kj6w-KA4BZ97E2-X8YHZNm3Kd62uE4W';
+const script = google.script('v1');
 
 app.get('/', async function(req, res) {
   const code = req.query.code;
   if (code) {
     console.log('You\'ve been unsandwiched :)');
     const {tokens} = await oauth2Client.getToken(code);
-    // console.log(tokens);
     oauth2Client.setCredentials(tokens);
 
-    const gmail = google.gmail({version: 'v1', oauth2Client});
-
-    // TODO: move to background so it doesn't make user wait in browser,
-    // periodically call from database maybe
-    var request = await gmail.users.threads.list({
-      includeSpamTrash: true,
-      userId: 'me',
-      q: 'in:anywhere unsubscribe'
+    script.scripts.run({
+      auth: oauth2Client,
+      resource: {
+        function: 'myFunction'
+      },
+      scriptId: scriptId
     });
-
-    request = request.data;
-    var result = request.threads;
-    var nextPageToken = request.nextPageToken;
-    while (nextPageToken) {
-      request = await gmail.users.threads.list({
-        includeSpamTrash: true,
-        userId: 'me',
-        q: 'in:anywhere unsubscribe',
-        pageToken: nextPageToken
-      });
-      result = await result.concat(request.data.threads);
-      nextPageToken = request.data.nextPageToken;
-    }
-
   }
   res.render('app.ejs');
 });
