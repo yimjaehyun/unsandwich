@@ -3,7 +3,7 @@ const {google} = require('googleapis');
 
 const app = express();
 app.set('view engine', 'ejs');
-const port = 3000;
+const port = process.env.PORT;
 const oauth2Client = new google.auth.OAuth2(
   process.env.CLIENT_ID,
   process.env.CLIENT_SECRET,
@@ -46,4 +46,4 @@ app.get('/auth', async function(req, res) {
   res.json(url);
 })
 
-app.listen(port, () => console.log(`Listening on port ${port}!`));
+app.listen(process.env.PORT || 3000, () => console.log(`Listening on port ${port}!`));
