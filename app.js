@@ -13,8 +13,7 @@ const oauth2Client = new google.auth.OAuth2(
 google.options({auth: oauth2Client});
 
 const scopes = [
-  'https://mail.google.com/',
-  'https://www.googleapis.com/auth/documents'
+  'https://mail.google.com/'
 ];
 
 const url = oauth2Client.generateAuthUrl({
